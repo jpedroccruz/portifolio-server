@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "Prisma.prisma",
+    "cweijan.vscode-database-client2",
+    "docker.docker",
+    "YoavBls.pretty-ts-errors",
+    "humao.rest-client"
+  ]
+}

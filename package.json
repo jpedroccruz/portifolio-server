@@ -1,0 +1,26 @@
+{
+  "name": "portifolio-server",
+  "scripts": {},
+  "version": "1.0.0",
+  "description": "Backend server for my portifolio",
+  "main": "dist/server.js",
+  "engines": {
+    "node": "22.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpedroccruz/portifolio-server.git"
+  },
+  "author": "jpedroccruz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jpedroccruz/portifolio-server/issues"
+  },
+  "homepage": "https://github.com/jpedroccruz/portifolio-server#readme",
+  "devDependencies": {
+    "@biomejs/biome": "2.4.16",
+    "@types/node": "25.9.3",
+    "biome": "0.2.2",
+    "typescript": "6.0.3"
+  }
+}
