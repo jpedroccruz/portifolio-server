@@ -1,26 +1,35 @@
 {
-  "name": "portifolio-server",
-  "scripts": {},
-  "version": "1.0.0",
-  "description": "Backend server for my portifolio",
-  "main": "dist/server.js",
-  "engines": {
-    "node": "22.x"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jpedroccruz/portifolio-server.git"
-  },
-  "author": "jpedroccruz",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/jpedroccruz/portifolio-server/issues"
-  },
-  "homepage": "https://github.com/jpedroccruz/portifolio-server#readme",
-  "devDependencies": {
-    "@biomejs/biome": "2.4.16",
-    "@types/node": "25.9.3",
-    "biome": "0.2.2",
-    "typescript": "6.0.3"
-  }
+	"name": "portifolio-server",
+	"version": "1.0.0",
+	"description": "Backend server for my portifolio",
+	"main": "dist/server.js",
+	"engines": {
+		"node": "22.x"
+	},
+	"scripts": {
+		"dev": "tsx watch src/server.ts",
+		"build": "npx prisma generete && tsc",
+		"start": "node dist/server.js",
+		"db:migrate": "npx prisma migrate deploy"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/jpedroccruz/portifolio-server.git"
+	},
+	"author": "jpedroccruz",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/jpedroccruz/portifolio-server/issues"
+	},
+	"homepage": "https://github.com/jpedroccruz/portifolio-server#readme",
+	"devDependencies": {
+		"@biomejs/biome": "2.4.16",
+		"@types/node": "25.9.3",
+		"biome": "0.2.2",
+		"tsx": "4.22.4",
+		"typescript": "6.0.3"
+	},
+	"dependencies": {
+		"postgres": "3.4.9"
+	}
 }
