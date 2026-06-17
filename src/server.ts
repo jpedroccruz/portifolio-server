@@ -1,5 +1,5 @@
 import { app } from "./app.js"
-import { env } from "./lib/env.js"
+import { env } from "./shared/lib/env.js"
 
 try {
 	app.listen({ port: env.PORT, host: "0.0.0.0" }, () => {
