@@ -1,15 +1,60 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Project {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  description  String
+  gitHubUrl    String?  @unique @map("github_url")
+  publishedAt  DateTime @map("published_at")
+  thumbnailUrl String?  @map("thumbnail_url")
+
+  stack ProjectStacks[]
+
+  @@map("projects")
+}
+
+model Stack {
+  id      Int    @id @default(autoincrement())
+  name    String @unique
+  iconUrl String @map("icon_url")
+
+  projects ProjectStacks[]
+
+  @@map("stacks")
+}
+
+model ProjectStacks {
+  projectId Int @map("project_id")
+  stackId   Int @map("stack_id")
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  stack   Stack   @relation(fields: [stackId], references: [id])
+
+  @@id([projectId, stackId])
+  @@map("project_stacks")
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  username      String         @unique
+  passwordHash  String         @map("password_hash")
+  refreshTokens RefreshToken[]
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  createdAt DateTime @default(now())
+  userId    Int      @map("user_id")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("refresh_tokens")
 }

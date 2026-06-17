@@ -7,9 +7,9 @@
 		"node": "22.x"
 	},
 	"scripts": {
-		"dev": "tsx watch src/server.ts",
-		"build": "npx prisma generete && tsc",
-		"start": "node dist/server.js",
+		"dev": "tsx --env-file=.env watch src/server.ts",
+		"build": "npx prisma generate && tsc",
+		"start": "node --env-file=.env dist/server.js",
 		"db:migrate": "npx prisma migrate deploy"
 	},
 	"type": "module",
