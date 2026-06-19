@@ -14,31 +14,18 @@ model Project {
   gitHubUrl    String?  @unique @map("github_url")
   publishedAt  DateTime @map("published_at")
   thumbnailUrl String?  @map("thumbnail_url")
-
-  stack ProjectStacks[]
+  stacks       Stack[]
 
   @@map("projects")
 }
 
 model Stack {
-  id      Int    @id @default(autoincrement())
-  name    String @unique
-  iconUrl String @map("icon_url")
-
-  projects ProjectStacks[]
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  iconUrl  String    @map("icon_url")
+  projects Project[]
 
   @@map("stacks")
-}
-
-model ProjectStacks {
-  projectId Int @map("project_id")
-  stackId   Int @map("stack_id")
-
-  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  stack   Stack   @relation(fields: [stackId], references: [id])
-
-  @@id([projectId, stackId])
-  @@map("project_stacks")
 }
 
 model User {
