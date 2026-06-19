@@ -9,4 +9,5 @@ export interface ProjectRepository {
 
 	findMany(): Promise<Project[]>
 	findById(id: number): Promise<Project | null>
+	findByName(name: string): Promise<Project | null>
 }

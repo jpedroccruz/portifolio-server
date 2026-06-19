@@ -72,4 +72,15 @@ export class PrismaProjectRepository implements ProjectRepository {
 			},
 		})
 	}
+
+	async findByName(name: string): Promise<Project | null> {
+		return this.prisma.project.findUnique({
+			where: {
+				name,
+			},
+			include: {
+				stacks: true,
+			},
+		})
+	}
 }
