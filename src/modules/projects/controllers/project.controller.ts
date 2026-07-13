@@ -1,7 +1,9 @@
 import type { FastifyReply, FastifyRequest } from "fastify"
 import type z from "zod"
 import { makeCreateProjectService } from "../factories/makeCreateProjectService.js"
+import { makeDeleteProjectService } from "../factories/makeDeleteProjectService.js"
 import type { createProjectSchema } from "../schemas/create-project.schema.js"
+import type { deleteProjectSchema } from "../schemas/delete-project.schema.js"
 
 export class ProjectController {
 	async create(
@@ -13,5 +15,16 @@ export class ProjectController {
 		const service = makeCreateProjectService()
 		const project = await service.execute(request.body)
 		return reply.code(201).send({ data: project })
+	}
+
+	async delete(
+		request: FastifyRequest<{
+			Params: z.infer<typeof deleteProjectSchema.params>
+		}>,
+		reply: FastifyReply,
+	) {
+		const service = makeDeleteProjectService()
+		await service.execute(request.params.id)
+		return reply.code(204).send()
 	}
 }
