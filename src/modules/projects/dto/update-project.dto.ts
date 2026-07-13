@@ -2,8 +2,8 @@ export type UpdateProjectDTO = {
 	id: number
 	name: string
 	description: string
-	gitHubUrl: string
+	gitHubUrl?: string
 	publishedAt: Date
-	thumbnailUrl: string
+	thumbnailUrl?: string
 	stackIds: number[]
 }
