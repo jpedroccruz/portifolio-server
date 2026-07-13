@@ -4,7 +4,7 @@ import { errorSchema } from "../../../shared/schema/error.schema.js"
 export const deleteProjectSchema = {
 	tags: ["Project"],
 	summary: "Delete Project",
-	description: "Delete /projects/:id - delete a project",
+	description: "DELETE /projects/:id - delete a project",
 	params: z.object({
 		id: z.coerce.number(),
 	}),
