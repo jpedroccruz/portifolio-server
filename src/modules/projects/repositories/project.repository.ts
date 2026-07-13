@@ -4,7 +4,7 @@ import type { Project } from "../entities/project.js"
 
 export interface ProjectRepository {
 	create(data: CreateProjectDTO): Promise<Project>
-	update(id: number, data: UpdateProjectDTO): Promise<Project>
+	update(data: UpdateProjectDTO): Promise<Project>
 	delete(id: number): Promise<void>
 
 	findMany(): Promise<Project[]>
