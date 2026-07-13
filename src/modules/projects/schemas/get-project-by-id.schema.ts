@@ -10,7 +10,7 @@ export const getProjectByIdSchema = {
 		id: z.coerce.number(),
 	}),
 	response: {
-		201: z.object({ data: projectSchema }),
+		200: z.object({ data: projectSchema }),
 		400: errorSchema,
 		401: errorSchema,
 		404: errorSchema,
