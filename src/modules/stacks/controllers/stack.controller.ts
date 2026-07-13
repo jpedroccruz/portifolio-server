@@ -3,10 +3,12 @@ import type z from "zod"
 import { makeCreateStackService } from "../factories/makeCreateStackService.js"
 import { makeDeleteStackService } from "../factories/makeDeleteStackService.js"
 import { makeGetStackByIdService } from "../factories/makeGetStackByIdService.js"
+import { makeListStacksService } from "../factories/makeListStackService.js"
 import { makePrismaStackRepository } from "../factories/makePrismaStackRepository.js"
 import type { createStackSchema } from "../schemas/create-stack.schema.js"
 import type { deleteStackSchema } from "../schemas/delete-stack.schema.js"
 import type { getStackByIdSchema } from "../schemas/get-stack-by-id.schema.js"
+import type { getStacksSchema } from "../schemas/get-stacks.schema.js"
 
 export class StackController {
 	async create(
@@ -42,5 +44,16 @@ export class StackController {
 		const service = makeGetStackByIdService(makePrismaStackRepository())
 		const stack = await service.execute(request.params.id)
 		return reply.code(200).send({ data: stack })
+	}
+
+	async getAll(
+		_: FastifyRequest,
+		reply: FastifyReply<{
+			Reply: z.infer<(typeof getStacksSchema.response)["200"]>
+		}>,
+	) {
+		const service = makeListStacksService(makePrismaStackRepository())
+		const stacks = await service.execute()
+		return reply.code(200).send({ data: stacks })
 	}
 }
