@@ -5,6 +5,7 @@ import { makeCreateProjectService } from "../factories/makeCreateProjectService.
 import { makeDeleteProjectService } from "../factories/makeDeleteProjectService.js"
 import { makeGetProjectByIdService } from "../factories/makeGetProjectByIdService.js"
 import { makeGetProjectsService } from "../factories/makeGetProjectsService.js"
+import { makePrismaProjectRepository } from "../factories/makePrismaProjectRepository.js"
 import { makeUpdateProjectService } from "../factories/makeUpdateProjectService.js"
 import { createProjectSchema } from "../schemas/create-project.schema.js"
 import { deleteProjectSchema } from "../schemas/delete-project.schema.js"
@@ -19,7 +20,7 @@ export class ProjectController {
 			Reply: z.infer<(typeof createProjectSchema.response)["201"]>
 		}>,
 	) {
-		const service = makeCreateProjectService()
+		const service = makeCreateProjectService(makePrismaProjectRepository())
 		const project = await service.execute(request.body)
 		return reply.code(201).send({ data: project })
 	}
@@ -30,7 +31,7 @@ export class ProjectController {
 		}>,
 		reply: FastifyReply,
 	) {
-		const service = makeDeleteProjectService()
+		const service = makeDeleteProjectService(makePrismaProjectRepository())
 		await service.execute(request.params.id)
 		return reply.code(204).send()
 	}
@@ -43,7 +44,7 @@ export class ProjectController {
 			Reply: z.infer<(typeof getProjectByIdSchema.response)["200"]>
 		}>,
 	) {
-		const service = makeGetProjectByIdService()
+		const service = makeGetProjectByIdService(makePrismaProjectRepository())
 		const project = await service.execute(request.params.id)
 		return reply.code(200).send({ data: project })
 	}
@@ -54,7 +55,7 @@ export class ProjectController {
 			Reply: z.infer<(typeof getProjectsSchema.response)["200"]>
 		}>,
 	) {
-		const service = makeGetProjectsService()
+		const service = makeGetProjectsService(makePrismaProjectRepository())
 		const projects = await service.execute()
 		return reply.code(200).send({ data: projects })
 	}
@@ -68,7 +69,7 @@ export class ProjectController {
 			Reply: z.infer<(typeof updateProjectSchema.response)["200"]>
 		}>,
 	) {
-		const service = makeUpdateProjectService()
+		const service = makeUpdateProjectService(makePrismaProjectRepository())
 		const project = await service.execute({
 			id: request.params.id,
 			...request.body,

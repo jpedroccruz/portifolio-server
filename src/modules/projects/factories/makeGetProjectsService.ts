@@ -1,6 +1,6 @@
+import type { ProjectRepository } from "../repositories/project.repository.js"
 import { ListProjectsService } from "../services/list-projects.service.js"
-import { makeProjectRepository } from "./makeProjectRepository.js"
 
-export function makeGetProjectsService() {
-	return new ListProjectsService(makeProjectRepository())
+export function makeGetProjectsService(repository: ProjectRepository) {
+	return new ListProjectsService(repository)
 }
