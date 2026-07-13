@@ -10,8 +10,8 @@ export class CreateStackService {
 
 		if (stack)
 			throw new ConflictError(
-				"This Project Already Exists.",
-				"PROJECT_ALREADY_EXISTS",
+				"This Stack Already Exists.",
+				"STACK_ALREADY_EXISTS",
 			)
 
 		return this.stackRepository.create(data)
