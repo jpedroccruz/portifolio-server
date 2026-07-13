@@ -1,8 +1,10 @@
 import type { FastifyReply, FastifyRequest } from "fastify"
 import type z from "zod"
 import { makeCreateStackService } from "../factories/makeCreateStackService.js"
+import { makeDeleteStackService } from "../factories/makeDeleteStackService.js"
 import { makePrismaStackRepository } from "../factories/makePrismaStackRepository.js"
 import type { createStackSchema } from "../schemas/create-stack.schema.js"
+import type { deleteStackSchema } from "../schemas/delete-stack.schema.js"
 
 export class StackController {
 	async create(
@@ -14,5 +16,16 @@ export class StackController {
 		const service = makeCreateStackService(makePrismaStackRepository())
 		const stack = await service.execute(request.body)
 		return reply.code(201).send({ data: stack })
+	}
+
+	delete(
+		request: FastifyRequest<{
+			Params: z.infer<typeof deleteStackSchema.params>
+		}>,
+		reply: FastifyReply,
+	) {
+		const service = makeDeleteStackService(makePrismaStackRepository())
+		service.execute(request.params.id)
+		return reply.code(204).send()
 	}
 }
