@@ -5,10 +5,12 @@ import { makeDeleteStackService } from "../factories/makeDeleteStackService.js"
 import { makeGetStackByIdService } from "../factories/makeGetStackByIdService.js"
 import { makeListStacksService } from "../factories/makeListStackService.js"
 import { makePrismaStackRepository } from "../factories/makePrismaStackRepository.js"
+import { makeUpdateStackService } from "../factories/makeUpdateStackService.js"
 import type { createStackSchema } from "../schemas/create-stack.schema.js"
 import type { deleteStackSchema } from "../schemas/delete-stack.schema.js"
 import type { getStackByIdSchema } from "../schemas/get-stack-by-id.schema.js"
 import type { getStacksSchema } from "../schemas/get-stacks.schema.js"
+import type { updateStackSchema } from "../schemas/update-stack.schema.js"
 
 export class StackController {
 	async create(
@@ -55,5 +57,22 @@ export class StackController {
 		const service = makeListStacksService(makePrismaStackRepository())
 		const stacks = await service.execute()
 		return reply.code(200).send({ data: stacks })
+	}
+
+	async update(
+		request: FastifyRequest<{
+			Body: z.infer<typeof updateStackSchema.body>
+			Params: z.infer<typeof updateStackSchema.params>
+		}>,
+		reply: FastifyReply<{
+			Reply: z.infer<(typeof updateStackSchema.response)["200"]>
+		}>,
+	) {
+		const service = makeUpdateStackService(makePrismaStackRepository())
+		const stack = await service.execute({
+			id: request.params.id,
+			...request.body,
+		})
+		return reply.code(200).send({ data: stack })
 	}
 }
