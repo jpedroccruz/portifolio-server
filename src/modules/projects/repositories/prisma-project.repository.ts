@@ -25,12 +25,12 @@ export class PrismaProjectRepository implements ProjectRepository {
 		})
 	}
 
-	async update(id: number, data: UpdateProjectDTO): Promise<Project> {
+	async update(data: UpdateProjectDTO): Promise<Project> {
 		const { stackIds, ...projectData } = data
 
 		return this.prisma.project.update({
 			where: {
-				id,
+				id: data.id,
 			},
 			data: {
 				...projectData,
