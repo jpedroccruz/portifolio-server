@@ -18,7 +18,7 @@ export const updateProjectSchema = {
 		stackIds: z.array(z.number()).min(1),
 	}),
 	response: {
-		201: z.object({ data: projectSchema }),
+		200: z.object({ data: projectSchema }),
 		400: errorSchema,
 		401: errorSchema,
 		404: errorSchema,

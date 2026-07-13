@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/style/useImportType: runtime reference */
 import type { FastifyReply, FastifyRequest } from "fastify"
 import type z from "zod"
 import { makeCreateProjectService } from "../factories/makeCreateProjectService.js"
@@ -5,11 +6,11 @@ import { makeDeleteProjectService } from "../factories/makeDeleteProjectService.
 import { makeGetProjectByIdService } from "../factories/makeGetProjectByIdService.js"
 import { makeGetProjectsService } from "../factories/makeGetProjectsService.js"
 import { makeUpdateProjectService } from "../factories/makeUpdateProjectService.js"
-import type { createProjectSchema } from "../schemas/create-project.schema.js"
-import type { deleteProjectSchema } from "../schemas/delete-project.schema.js"
-import type { getProjectByIdSchema } from "../schemas/get-project-by-id.schema.js"
-import type { getProjectsSchema } from "../schemas/get-projects.schema.js"
-import type { updateProjectSchema } from "../schemas/update-project.schema.js"
+import { createProjectSchema } from "../schemas/create-project.schema.js"
+import { deleteProjectSchema } from "../schemas/delete-project.schema.js"
+import { getProjectByIdSchema } from "../schemas/get-project-by-id.schema.js"
+import { getProjectsSchema } from "../schemas/get-projects.schema.js"
+import { updateProjectSchema } from "../schemas/update-project.schema.js"
 
 export class ProjectController {
 	async create(
@@ -44,7 +45,7 @@ export class ProjectController {
 	) {
 		const service = makeGetProjectByIdService()
 		const project = await service.execute(request.params.id)
-		return reply.code(201).send({ data: project })
+		return reply.code(200).send({ data: project })
 	}
 
 	async getAll(
@@ -64,7 +65,7 @@ export class ProjectController {
 			Body: z.infer<typeof updateProjectSchema.body>
 		}>,
 		reply: FastifyReply<{
-			Reply: z.infer<(typeof updateProjectSchema.response)["201"]>
+			Reply: z.infer<(typeof updateProjectSchema.response)["200"]>
 		}>,
 	) {
 		const service = makeUpdateProjectService()
@@ -72,6 +73,6 @@ export class ProjectController {
 			id: request.params.id,
 			...request.body,
 		})
-		return reply.code(201).send({ data: project })
+		return reply.code(200).send({ data: project })
 	}
 }
