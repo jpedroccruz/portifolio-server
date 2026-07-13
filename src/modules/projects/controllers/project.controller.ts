@@ -4,10 +4,12 @@ import { makeCreateProjectService } from "../factories/makeCreateProjectService.
 import { makeDeleteProjectService } from "../factories/makeDeleteProjectService.js"
 import { makeGetProjectByIdService } from "../factories/makeGetProjectByIdService.js"
 import { makeGetProjectsService } from "../factories/makeGetProjectsService.js"
+import { makeUpdateProjectService } from "../factories/makeUpdateProjectService.js"
 import type { createProjectSchema } from "../schemas/create-project.schema.js"
 import type { deleteProjectSchema } from "../schemas/delete-project.schema.js"
 import type { getProjectByIdSchema } from "../schemas/get-project-by-id.schema.js"
 import type { getProjectsSchema } from "../schemas/get-projects.schema.js"
+import type { updateProjectSchema } from "../schemas/update-project.schema.js"
 
 export class ProjectController {
 	async create(
@@ -54,5 +56,22 @@ export class ProjectController {
 		const service = makeGetProjectsService()
 		const projects = await service.execute()
 		return reply.code(200).send({ data: projects })
+	}
+
+	async update(
+		request: FastifyRequest<{
+			Params: z.infer<typeof updateProjectSchema.params>
+			Body: z.infer<typeof updateProjectSchema.body>
+		}>,
+		reply: FastifyReply<{
+			Reply: z.infer<(typeof updateProjectSchema.response)["201"]>
+		}>,
+	) {
+		const service = makeUpdateProjectService()
+		const project = await service.execute({
+			id: request.params.id,
+			...request.body,
+		})
+		return reply.code(201).send({ data: project })
 	}
 }
