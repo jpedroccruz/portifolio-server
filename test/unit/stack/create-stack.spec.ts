@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest"
 import { makeCreateStackService } from "../../../src/modules/stacks/factories/makeCreateStackService.js"
 import { ConflictError } from "../../../src/shared/error/Errors.js"
-import { makeInMemoryStackRepository } from "../../factories/makeInMemoryStackRepository.js"
-import { makeStack } from "../../factories/makeStack.js"
+import { makeInMemoryStackRepository } from "./factories/makeInMemoryStackRepository.js"
+import { makeStack } from "./factories/makeStack.js"
 
 describe("Create Stack Service", () => {
 	it("should create a stack", async () => {
