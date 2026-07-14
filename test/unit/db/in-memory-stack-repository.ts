@@ -1,7 +1,7 @@
-import type { CreateStackDTO } from "../../src/modules/stacks/dto/create-stack.dto"
-import type { UpdateStackDTO } from "../../src/modules/stacks/dto/update-stack.dto"
-import type { Stack } from "../../src/modules/stacks/entities/stack"
-import type { StackRepository } from "../../src/modules/stacks/repositories/stack.repository"
+import type { CreateStackDTO } from "../../../src/modules/stacks/dto/create-stack.dto"
+import type { UpdateStackDTO } from "../../../src/modules/stacks/dto/update-stack.dto"
+import type { Stack } from "../../../src/modules/stacks/entities/stack"
+import type { StackRepository } from "../../../src/modules/stacks/repositories/stack.repository"
 
 export class InMemoryStackRepository implements StackRepository {
 	public stacks: Stack[] = []
