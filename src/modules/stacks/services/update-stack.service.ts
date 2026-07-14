@@ -16,7 +16,7 @@ export class UpdateStackService {
 		if (stackExists && data.id !== stackExists.id)
 			throw new ConflictError(
 				"This Stack Name Already Exist.",
-				"STACK_NAME_ALREADY_EXISTS",
+				"STACK_ALREADY_EXISTS",
 			)
 
 		return await this.stackRepository.update(data)
