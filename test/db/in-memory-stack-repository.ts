@@ -33,6 +33,10 @@ export class InMemoryStackRepository implements StackRepository {
 		return this.stacks
 	}
 
+	async findManyByIds(ids: number[]): Promise<Stack[]> {
+		return this.stacks.filter((stack) => ids.includes(stack.id))
+	}
+
 	async update(data: UpdateStackDTO): Promise<Stack> {
 		const index = this.stacks.findIndex((stack) => stack.id === data.id)
 

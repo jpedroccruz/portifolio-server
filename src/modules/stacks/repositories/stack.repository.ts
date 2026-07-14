@@ -8,6 +8,7 @@ export interface StackRepository {
 	delete(id: number): Promise<void>
 
 	findMany(): Promise<Stack[]>
+	findManyByIds(ids: number[]): Promise<Stack[]>
 	findById(id: number): Promise<Stack | null>
 	findByName(name: string): Promise<Stack | null>
 }

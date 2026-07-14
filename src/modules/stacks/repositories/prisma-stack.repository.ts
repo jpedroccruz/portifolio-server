@@ -29,6 +29,16 @@ export class PrismaStackRepository implements StackRepository {
 		})
 	}
 
+	findManyByIds(ids: number[]): Promise<Stack[]> {
+		return this.prisma.stack.findMany({
+			where: {
+				id: {
+					in: ids,
+				},
+			},
+		})
+	}
+
 	findByName(name: string): Promise<Stack | null> {
 		return this.prisma.stack.findFirst({
 			where: {
