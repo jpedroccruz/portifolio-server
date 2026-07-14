@@ -23,7 +23,7 @@ export class UpdateProjectService {
 		if (projectExists && data.id !== projectExists.id)
 			throw new ConflictError(
 				"This Project Name Already Exist.",
-				"PROJECT_NAME_ALREADY_EXISTS",
+				"PROJECT_ALREADY_EXISTS",
 			)
 
 		const stacks = await this.stackRepository.findManyByIds(data.stackIds)
