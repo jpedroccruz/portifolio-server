@@ -8,6 +8,8 @@ const envSchema = z.object({
 	POSTGRES_DB: z.string().min(1),
 	POSTGRES_PORT: z.coerce.number().default(5432),
 	POSTGRES_HOST: z.string().min(1).default("localhost"),
+	EMAIL: z.email().min(1),
+	MAIL_PROVIDER_KEY: z.string().min(1),
 })
 
 export const env = envSchema.parse(process.env)
