@@ -1,5 +1,6 @@
 import type { Resend } from "resend"
 import { InternalServerError } from "../../../shared/error/Errors.js"
+import { env } from "../../../shared/lib/env.js"
 import type { Message } from "../entities/message.js"
 import type { MailProvider } from "./mail.provider.js"
 
@@ -9,7 +10,7 @@ export class ResendMailProvider implements MailProvider {
 	async send(data: Message): Promise<void> {
 		const { data: _, error } = await this.resend.emails.send({
 			from: data.from,
-			to: data.to,
+			to: env.EMAIL,
 			subject: "New Portifolio Contact",
 			html: data.text,
 		})
