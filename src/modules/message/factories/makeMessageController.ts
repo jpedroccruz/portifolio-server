@@ -1,9 +1,8 @@
 import { MessageController } from "../controllers/message.controller.js"
-import { makeResendMailProvider } from "./makeResendMailProvider.js"
+import type { MailProvider } from "../providers/mail.provider.js"
 import { makeSendMessageService } from "./makeSendMessageService.js"
 
-export function makeMessageController() {
-	const provider = makeResendMailProvider()
+export function makeMessageController(provider: MailProvider) {
 	const service = makeSendMessageService(provider)
 
 	return new MessageController(service)
