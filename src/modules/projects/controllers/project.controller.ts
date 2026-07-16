@@ -1,31 +1,33 @@
 /** biome-ignore-all lint/style/useImportType: runtime reference */
 import type { FastifyReply, FastifyRequest } from "fastify"
 import type z from "zod"
-import { makePrismaStackRepository } from "../../stacks/factories/makePrismaStackRepository.js"
-import { makeCreateProjectService } from "../factories/makeCreateProjectService.js"
-import { makeDeleteProjectService } from "../factories/makeDeleteProjectService.js"
-import { makeGetProjectByIdService } from "../factories/makeGetProjectByIdService.js"
-import { makeListProjectsService } from "../factories/makeListProjectsService.js"
-import { makePrismaProjectRepository } from "../factories/makePrismaProjectRepository.js"
-import { makeUpdateProjectService } from "../factories/makeUpdateProjectService.js"
 import { createProjectSchema } from "../schemas/create-project.schema.js"
 import { deleteProjectSchema } from "../schemas/delete-project.schema.js"
 import { getProjectByIdSchema } from "../schemas/get-project-by-id.schema.js"
 import { getProjectsSchema } from "../schemas/get-projects.schema.js"
 import { updateProjectSchema } from "../schemas/update-project.schema.js"
+import type { CreateProjectService } from "../services/create-project.service.js"
+import type { DeleteProjectService } from "../services/delete-project.service.js"
+import type { GetProjectByIdService } from "../services/get-project-by-id.service.js"
+import type { ListProjectsService } from "../services/list-projects.service.js"
+import type { UpdateProjectService } from "../services/update-project.service.js"
 
 export class ProjectController {
+	constructor(
+		private readonly createProjectService: CreateProjectService,
+		private readonly deleteProjectService: DeleteProjectService,
+		private readonly getProjectByIdService: GetProjectByIdService,
+		private readonly listProjectsService: ListProjectsService,
+		private readonly updateProjectService: UpdateProjectService,
+	) {}
+
 	async create(
 		request: FastifyRequest<{ Body: z.infer<typeof createProjectSchema.body> }>,
 		reply: FastifyReply<{
 			Reply: z.infer<(typeof createProjectSchema.response)["201"]>
 		}>,
 	) {
-		const service = makeCreateProjectService(
-			makePrismaProjectRepository(),
-			makePrismaStackRepository(),
-		)
-		const project = await service.execute(request.body)
+		const project = await this.createProjectService.execute(request.body)
 		return reply.code(201).send({ data: project })
 	}
 
@@ -35,8 +37,7 @@ export class ProjectController {
 		}>,
 		reply: FastifyReply,
 	) {
-		const service = makeDeleteProjectService(makePrismaProjectRepository())
-		await service.execute(request.params.id)
+		await this.deleteProjectService.execute(request.params.id)
 		return reply.code(204).send()
 	}
 
@@ -48,8 +49,7 @@ export class ProjectController {
 			Reply: z.infer<(typeof getProjectByIdSchema.response)["200"]>
 		}>,
 	) {
-		const service = makeGetProjectByIdService(makePrismaProjectRepository())
-		const project = await service.execute(request.params.id)
+		const project = await this.getProjectByIdService.execute(request.params.id)
 		return reply.code(200).send({ data: project })
 	}
 
@@ -59,8 +59,7 @@ export class ProjectController {
 			Reply: z.infer<(typeof getProjectsSchema.response)["200"]>
 		}>,
 	) {
-		const service = makeListProjectsService(makePrismaProjectRepository())
-		const projects = await service.execute()
+		const projects = await this.listProjectsService.execute()
 		return reply.code(200).send({ data: projects })
 	}
 
@@ -73,11 +72,7 @@ export class ProjectController {
 			Reply: z.infer<(typeof updateProjectSchema.response)["200"]>
 		}>,
 	) {
-		const service = makeUpdateProjectService(
-			makePrismaProjectRepository(),
-			makePrismaStackRepository(),
-		)
-		const project = await service.execute({
+		const project = await this.updateProjectService.execute({
 			id: request.params.id,
 			...request.body,
 		})
