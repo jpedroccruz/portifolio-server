@@ -1,4 +1,5 @@
 import fastifyCors from "@fastify/cors"
+import fastifyJwt from "@fastify/jwt"
 import fastify from "fastify"
 import {
 	serializerCompiler,
@@ -6,6 +7,7 @@ import {
 	type ZodTypeProvider,
 } from "fastify-type-provider-zod"
 import { routes } from "./routes/index.js"
+import { env } from "./shared/lib/env.js"
 
 export const app = fastify({
 	logger: {
@@ -20,6 +22,10 @@ export const app = fastify({
 		},
 	},
 }).withTypeProvider<ZodTypeProvider>()
+
+app.register(fastifyJwt, {
+	secret: env.JWT_SECRET,
+})
 
 app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
