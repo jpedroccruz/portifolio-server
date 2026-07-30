@@ -32,16 +32,12 @@ export class LoginService {
 				"INVALID_CREDENTIALS",
 			)
 
-		const tokenId = crypto.randomUUID()
+		const jti = crypto.randomUUID()
 
 		const accessToken = this.tokenProvider.generateAccessToken(user.id)
+		const refreshToken = this.tokenProvider.generateRefreshToken(user.id, jti)
 
-		const refreshToken = this.tokenProvider.generateRefreshToken(
-			user.id,
-			tokenId,
-		)
-
-		await this.refreshTokenRepository.create({ userId: user.id, tokenId })
+		await this.refreshTokenRepository.create({ userId: user.id, tokenId: jti })
 
 		return {
 			accessToken,

@@ -16,11 +16,11 @@ export class FastifyTokenProvider implements TokenProvider {
 		)
 	}
 
-	generateRefreshToken(userId: number, tokenId: string): string {
+	generateRefreshToken(userId: number, jti: string): string {
 		return this.app.jwt.sign(
 			{
 				sub: userId,
-				tokenId,
+				jti,
 			},
 			{
 				expiresIn: "7d",

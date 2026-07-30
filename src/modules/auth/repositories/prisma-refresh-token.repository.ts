@@ -13,7 +13,7 @@ export class PrismaRefreshTokenRepository implements RefreshTokenRepository {
 	}
 
 	async delete(tokenId: string): Promise<void> {
-		this.prisma.refreshToken.delete({
+		await this.prisma.refreshToken.delete({
 			where: {
 				tokenId,
 			},

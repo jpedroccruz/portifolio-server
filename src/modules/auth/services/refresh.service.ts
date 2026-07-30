@@ -9,29 +9,31 @@ export class RefreshService {
 	) {}
 
 	async execute(data: string) {
-		const payload = this.tokenProvider.verifyRefreshToken(data)
+		const { jti, sub } = this.tokenProvider.verifyRefreshToken(data)
 
-		const token = await this.refreshTokenRepository.findByTokenId(payload.jti)
+		const token = await this.refreshTokenRepository.findByTokenId(jti)
 
 		if (!token)
-			throw new BadRequestError("Invalid token", "INVALID_REFRESH_TOKEN")
+			throw new BadRequestError(
+				"Invalid refresh token",
+				"INVALID_REFRESH_TOKEN",
+			)
 
-		await this.refreshTokenRepository.delete(payload.jti)
+		await this.refreshTokenRepository.delete(jti)
 
-		const tokenId = crypto.randomUUID()
+		const newJti = crypto.randomUUID()
 
-		const accessToken = this.tokenProvider.generateAccessToken(token.userId)
+		const newAccessToken = this.tokenProvider.generateAccessToken(sub)
+		const newRefreshToken = this.tokenProvider.generateRefreshToken(sub, newJti)
 
-		const refreshToken = this.tokenProvider.generateRefreshToken(
-			token.userId,
-			tokenId,
-		)
-
-		await this.refreshTokenRepository.create({ userId: token.userId, tokenId })
+		await this.refreshTokenRepository.create({
+			userId: sub,
+			tokenId: newJti,
+		})
 
 		return {
-			accessToken,
-			refreshToken,
+			accessToken: newAccessToken,
+			refreshToken: newRefreshToken,
 		}
 	}
 }

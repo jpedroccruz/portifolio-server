@@ -11,7 +11,7 @@ export class LogoutService {
 	async execute(refreshToken: string) {
 		const { jti } = this.tokenProvider.verifyRefreshToken(refreshToken)
 
-		const token = this.refreshTokenRepository.findByTokenId(jti)
+		const token = await this.refreshTokenRepository.findByTokenId(jti)
 
 		if (!token)
 			throw new UnauthorizedError(
@@ -19,6 +19,6 @@ export class LogoutService {
 				"INVALID_REFRESH_TOKEN",
 			)
 
-		this.refreshTokenRepository.delete(jti)
+		await this.refreshTokenRepository.delete(jti)
 	}
 }
