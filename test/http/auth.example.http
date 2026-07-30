@@ -1,0 +1,27 @@
+### Login
+
+POST http://localhost:3333/login
+Content-Type: application/json
+
+{
+  "name": "",
+  "password": ""
+}
+
+### Logout
+
+POST http://localhost:3333/logout
+Content-Type: application/json
+
+{
+  "token": ""
+}
+
+### Refresh token
+
+POST http://localhost:3333/refresh
+Content-Type: application/json
+
+{
+  "token": ""
+}
