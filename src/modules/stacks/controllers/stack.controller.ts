@@ -30,13 +30,13 @@ export class StackController {
 		return reply.code(201).send({ data: stack })
 	}
 
-	delete(
+	async delete(
 		request: FastifyRequest<{
 			Params: z.infer<typeof deleteStackSchema.params>
 		}>,
 		reply: FastifyReply,
 	) {
-		this.deleteStackService.execute(request.params.id)
+		await this.deleteStackService.execute(request.params.id)
 		return reply.code(204).send()
 	}
 

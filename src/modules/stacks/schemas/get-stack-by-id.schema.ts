@@ -7,7 +7,7 @@ export const getStackByIdSchema = {
 	summary: "Get Stack By Id",
 	description: "GET /stacks/:id - get a stack",
 	params: z.object({
-		id: z.number(),
+		id: z.coerce.number(),
 	}),
 	response: {
 		200: z.object({ data: stackSchema }),
