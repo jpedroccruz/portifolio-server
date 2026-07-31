@@ -9,8 +9,9 @@ export class ResendMailProvider implements MailProvider {
 
 	async send(data: Message): Promise<void> {
 		const { data: _, error } = await this.resend.emails.send({
-			from: data.from,
-			to: env.EMAIL,
+			from: env.MAIL_FROM,
+			to: env.MAIL_TO,
+			replyTo: data.from,
 			subject: "New Portifolio Contact",
 			html: data.text,
 		})
