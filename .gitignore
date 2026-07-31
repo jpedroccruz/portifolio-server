@@ -1,6 +1,7 @@
-node_modules
+node_modules/
 .env
 /src/generated/prisma
 *.http
 !*.example.http
 *.db
+coverage/
