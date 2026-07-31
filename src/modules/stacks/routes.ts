@@ -8,7 +8,7 @@ import { getStackByIdSchema } from "./schemas/get-stack-by-id.schema.js"
 import { getStacksSchema } from "./schemas/get-stacks.schema.js"
 import { updateStackSchema } from "./schemas/update-stack.schema.js"
 
-export function stacksRoutes(app: FastifyInstance) {
+export function stackRoutes(app: FastifyInstance) {
 	const stackRepository = new PrismaStackRepository(prisma)
 	const stackController = makeStackController(stackRepository)
 
