@@ -1,0 +1,10 @@
+### Send message
+
+POST http://localhost:3333/contact
+Content-Type: application/json
+
+{
+  "name": "",
+  "email": "",
+  "message": ""
+}
