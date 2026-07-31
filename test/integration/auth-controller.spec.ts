@@ -1,8 +1,8 @@
 import request from "supertest"
 import { beforeEach, describe, expect, it } from "vitest"
-import { app } from "../../../src/app.ts"
-import { hashPassword } from "../../../src/shared/lib/hash-password.ts"
-import { prisma } from "../../../src/shared/prisma/prisma-client.js"
+import { app } from "../../src/app.ts"
+import { hashPassword } from "../../src/shared/lib/hash-password.ts"
+import { prisma } from "../../src/shared/prisma/prisma-client.js"
 
 describe("Auth Controller", () => {
 	beforeEach(async () => {
