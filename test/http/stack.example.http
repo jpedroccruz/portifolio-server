@@ -1,0 +1,35 @@
+### Create stack
+
+POST http://localhost:3333/stacks
+Content-Type: application/json
+
+{
+  "name": "",
+  "iconUrl": ""
+}
+
+
+### Delete stack
+
+DELETE http://localhost:3333/stacks/:id
+
+
+### Get stack by ID
+
+GET http://localhost:3333/stacks/:id
+
+
+### Get stacks
+
+GET http://localhost:3333/stacks
+
+
+### Update stack
+
+PUT http://localhost:3333/stacks/:id
+Content-Type: application/json
+
+{
+  "name": "",
+  "iconUrl": ""
+}
