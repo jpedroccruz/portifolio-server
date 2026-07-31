@@ -9,7 +9,7 @@ export const deleteStackSchema = {
 		id: z.coerce.number(),
 	}),
 	response: {
-		201: z.void(),
+		204: z.void(),
 		400: errorSchema,
 		401: errorSchema,
 		404: errorSchema,
