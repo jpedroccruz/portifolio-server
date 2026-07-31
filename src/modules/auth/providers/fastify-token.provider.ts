@@ -1,4 +1,5 @@
 import type { FastifyInstance } from "fastify"
+import { UnauthorizedError } from "../../../shared/error/Errors.js"
 import type { RefreshTokenPayload } from "../entities/refresh-token-payload.js"
 import type { TokenProvider } from "./token.provider.js"
 
@@ -29,6 +30,13 @@ export class FastifyTokenProvider implements TokenProvider {
 	}
 
 	verifyRefreshToken(refreshToken: string): RefreshTokenPayload {
-		return this.app.jwt.verify(refreshToken)
+		try {
+			return this.app.jwt.verify(refreshToken)
+		} catch (_error) {
+			throw new UnauthorizedError(
+				"Invalid refresh token.",
+				"INVALID_REFRESH_TOKEN",
+			)
+		}
 	}
 }
