@@ -11,6 +11,7 @@
 		"build": "npx prisma generate && tsc",
 		"start": "node --env-file=.env dist/server.js",
 		"db:migrate": "npx prisma migrate deploy",
+		"db:seed": "tsx prisma/seed.ts",
 		"test:unit": "vitest -c vitest.unit.config.ts",
 		"test:integration": "vitest -c vitest.integration.config.ts"
 	},
