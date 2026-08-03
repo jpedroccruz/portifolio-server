@@ -4,12 +4,14 @@ import { app } from "../../src/app.ts"
 import { hashPassword } from "../../src/shared/lib/hash-password.ts"
 import { prisma } from "../../src/shared/prisma/prisma-client.js"
 
-describe("Auth Controller", () => {
+describe("Auth Controller", async () => {
+	const PASSWORD_HASH = await hashPassword("123456")
+
 	beforeEach(async () => {
 		await prisma.user.create({
 			data: {
 				username: "John Doe",
-				passwordHash: await hashPassword("123456"),
+				passwordHash: PASSWORD_HASH,
 			},
 		})
 	})
