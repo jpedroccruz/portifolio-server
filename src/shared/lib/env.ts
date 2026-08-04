@@ -6,6 +6,7 @@ const envSchema = z.object({
 	MAIL_TO: z.email().min(1),
 	MAIL_PROVIDER_KEY: z.string().min(1),
 	JWT_SECRET: z.string().min(1),
+	APP_ENV: z.string().min(1),
 })
 
 export const env = envSchema.parse(process.env)

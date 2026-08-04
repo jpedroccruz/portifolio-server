@@ -7,6 +7,7 @@ import {
 	type ZodTypeProvider,
 } from "fastify-type-provider-zod"
 import { routes } from "./routes/index.js"
+import { errorHandler } from "./shared/error/error-handler.js"
 import { env } from "./shared/lib/env.js"
 
 export const app = fastify({
@@ -31,6 +32,7 @@ app.register(fastifyJwt, {
 
 app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
+app.setErrorHandler(errorHandler)
 
 app.register(fastifyCors, {
 	origin: ["http://localhost:3333"],
