@@ -23,6 +23,8 @@ export const app = fastify({
 	},
 }).withTypeProvider<ZodTypeProvider>()
 
+export type AppInstance = typeof app
+
 app.register(fastifyJwt, {
 	secret: env.JWT_SECRET,
 })

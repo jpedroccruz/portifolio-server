@@ -1,4 +1,5 @@
-import type { FastifyInstance } from "fastify"
+import type { AppInstance } from "../../app.js"
+import { authHandler } from "../../shared/lib/auth-handler.js"
 import { prisma } from "../../shared/prisma/prisma-client.js"
 import { makeAuthController } from "./factories/makeAuthController.js"
 import { FastifyTokenProvider } from "./providers/fastify-token.provider.js"
@@ -8,7 +9,7 @@ import { loginSchema } from "./schemas/login.schema.js"
 import { logoutSchema } from "./schemas/logout.schema.js"
 import { refreshSchema } from "./schemas/refresh.schema.js"
 
-export function authRoutes(app: FastifyInstance) {
+export function authRoutes(app: AppInstance) {
 	const tokenProvider = new FastifyTokenProvider(app)
 	const userRepository = new PrismaUserRepository(prisma)
 	const refreshTokenRepository = new PrismaRefreshTokenRepository(prisma)
@@ -26,7 +27,7 @@ export function authRoutes(app: FastifyInstance) {
 
 	app.post(
 		"/logout",
-		{ schema: logoutSchema },
+		{ schema: logoutSchema, onRequest: [authHandler] },
 		authController.logout.bind(authController),
 	)
 

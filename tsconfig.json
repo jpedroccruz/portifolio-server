@@ -41,5 +41,5 @@
 		"moduleDetection": "force",
 		"skipLibCheck": true
 	},
-	"exclude": ["prisma.config.ts", "test/**", "vitest.**"]
+	"exclude": ["prisma.config.ts", "prisma/seed.ts", "test/**", "vitest.**"]
 }
