@@ -71,10 +71,11 @@ describe("Auth Controller", async () => {
 		})
 
 		const refreshToken = login.body.data.refreshToken
+		const accessToken = login.body.data.accessToken
 
 		const response = await request(app.server).post("/logout").send({
 			token: refreshToken,
-		})
+		}).set('Authorization', `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(200)
 
@@ -84,18 +85,32 @@ describe("Auth Controller", async () => {
 	})
 
 	it("should not logout with an invalid refresh token", async () => {
+		const login = await request(app.server).post("/login").send({
+			name: "John Doe",
+			password: "123456",
+		})
+
+		const accessToken = login.body.data.accessToken
+
 		const response = await request(app.server).post("/logout").send({
 			token: "invalid-refresh-token",
-		})
+		}).set('Authorization', `Bearer ${accessToken}`)
 
 		expect(response.body.code).toBe("INVALID_REFRESH_TOKEN")
 		expect(response.status).toBe(401)
 	})
 
 	it("should not logout with an invalid payload", async () => {
+		const login = await request(app.server).post("/login").send({
+			name: "John Doe",
+			password: "123456",
+		})
+
+		const accessToken = login.body.data.accessToken
+
 		const response = await request(app.server).post("/logout").send({
 			refreshToken: "",
-		})
+		}).set('Authorization', `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(400)
 	})
