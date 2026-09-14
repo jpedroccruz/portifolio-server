@@ -1,15 +1,24 @@
 import request from "supertest"
-import { describe, expect, it } from "vitest"
-
+import { beforeEach, describe, expect, it } from "vitest"
 import { app } from "../../src/app.js"
 import { prisma } from "../../src/shared/prisma/prisma-client.js"
+import { getAccessToken } from "./setup.integration.js"
 
 describe("Stack Controller", () => {
+	let accessToken: string
+
+	beforeEach(async () => {
+		accessToken = await getAccessToken("123456")
+	})
+
 	it("should create a stack", async () => {
-		const response = await request(app.server).post("/stacks").send({
-			name: "TypeScript",
-			iconUrl: "https://cdn.example.com/typescript.svg",
-		})
+		const response = await request(app.server)
+			.post("/stacks")
+			.send({
+				name: "TypeScript",
+				iconUrl: "https://cdn.example.com/typescript.svg",
+			})
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(201)
 
@@ -32,9 +41,12 @@ describe("Stack Controller", () => {
 	})
 
 	it("should not create a stack with an invalid payload", async () => {
-		const response = await request(app.server).post("/stacks").send({
-			name: "",
-		})
+		const response = await request(app.server)
+			.post("/stacks")
+			.send({
+				name: "",
+			})
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(400)
 	})
@@ -50,7 +62,9 @@ describe("Stack Controller", () => {
 			],
 		})
 
-		const response = await request(app.server).get("/stacks")
+		const response = await request(app.server)
+			.get("/stacks")
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(200)
 		expect(response.body.data).toHaveLength(2)
@@ -64,7 +78,9 @@ describe("Stack Controller", () => {
 			},
 		})
 
-		const response = await request(app.server).get(`/stacks/${stack.id}`)
+		const response = await request(app.server)
+			.get(`/stacks/${stack.id}`)
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(200)
 
@@ -78,7 +94,9 @@ describe("Stack Controller", () => {
 	})
 
 	it("should return 404 when stack does not exist", async () => {
-		const response = await request(app.server).get("/stacks/999")
+		const response = await request(app.server)
+			.get("/stacks/999")
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(404)
 	})
@@ -91,10 +109,13 @@ describe("Stack Controller", () => {
 			},
 		})
 
-		const response = await request(app.server).put(`/stacks/${stack.id}`).send({
-			name: "JavaScript",
-			iconUrl: "https://cdn.example.com/javascript.svg",
-		})
+		const response = await request(app.server)
+			.put(`/stacks/${stack.id}`)
+			.send({
+				name: "JavaScript",
+				iconUrl: "https://cdn.example.com/javascript.svg",
+			})
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(200)
 
@@ -121,7 +142,9 @@ describe("Stack Controller", () => {
 			},
 		})
 
-		const response = await request(app.server).delete(`/stacks/${stack.id}`)
+		const response = await request(app.server)
+			.delete(`/stacks/${stack.id}`)
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(204)
 

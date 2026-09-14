@@ -1,10 +1,17 @@
 import request from "supertest"
-import { describe, expect, it } from "vitest"
+import { beforeEach, describe, expect, it } from "vitest"
 
 import { app } from "../../src/app.js"
 import { prisma } from "../../src/shared/prisma/prisma-client.js"
+import { getAccessToken } from "./setup.integration.js"
 
 describe("Project Controller", () => {
+	let accessToken: string
+
+	beforeEach(async () => {
+		accessToken = await getAccessToken("123456")
+	})
+
 	it("should create a project", async () => {
 		const stack = await prisma.stack.create({
 			data: {
@@ -26,6 +33,7 @@ describe("Project Controller", () => {
 				publishedAt: publishedAt.toISOString(),
 				stackIds: [stack.id],
 			})
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(201)
 
@@ -50,7 +58,10 @@ describe("Project Controller", () => {
 	})
 
 	it("should not create a project with an invalid payload", async () => {
-		const response = await request(app.server).post("/projects").send({})
+		const response = await request(app.server)
+			.post("/projects")
+			.send({})
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(400)
 	})
@@ -75,7 +86,9 @@ describe("Project Controller", () => {
 			],
 		})
 
-		const response = await request(app.server).get("/projects")
+		const response = await request(app.server)
+			.get("/projects")
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(200)
 		expect(response.body.data).toHaveLength(2)
@@ -92,7 +105,9 @@ describe("Project Controller", () => {
 			},
 		})
 
-		const response = await request(app.server).get(`/projects/${project.id}`)
+		const response = await request(app.server)
+			.get(`/projects/${project.id}`)
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(200)
 
@@ -104,7 +119,9 @@ describe("Project Controller", () => {
 	})
 
 	it("should return 404 when project does not exist", async () => {
-		const response = await request(app.server).get("/projects/999")
+		const response = await request(app.server)
+			.get("/projects/999")
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(404)
 	})
@@ -138,6 +155,7 @@ describe("Project Controller", () => {
 				publishedAt: new Date().toISOString(),
 				stackIds: [stack.id],
 			})
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(200)
 
@@ -174,7 +192,9 @@ describe("Project Controller", () => {
 			},
 		})
 
-		const response = await request(app.server).delete(`/projects/${project.id}`)
+		const response = await request(app.server)
+			.delete(`/projects/${project.id}`)
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(204)
 
