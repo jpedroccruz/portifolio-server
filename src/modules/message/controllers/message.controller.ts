@@ -6,11 +6,11 @@ import type { SendMessageService } from "../services/send-message.service.js"
 export class MessageController {
 	constructor(private readonly sendMessageService: SendMessageService) {}
 
-	create(
+	async create(
 		request: FastifyRequest<{ Body: z.infer<typeof createMessageSchema.body> }>,
 		reply: FastifyReply,
 	) {
-		this.sendMessageService.execute(request.body)
+		await this.sendMessageService.execute(request.body)
 		return reply.code(204).send()
 	}
 }
