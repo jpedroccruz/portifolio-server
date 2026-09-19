@@ -6,6 +6,7 @@ import {
 	validatorCompiler,
 	type ZodTypeProvider,
 } from "fastify-type-provider-zod"
+import { swaggerConfig } from "./docs/swagger.js"
 import { routes } from "./routes/index.js"
 import { errorHandler } from "./shared/error/error-handler.js"
 import { env } from "./shared/lib/env.js"
@@ -39,5 +40,7 @@ app.register(fastifyCors, {
 	methods: ["GET", "POST", "PUT", "DELETE"],
 	credentials: true,
 })
+
+swaggerConfig(app)
 
 app.register(routes)
