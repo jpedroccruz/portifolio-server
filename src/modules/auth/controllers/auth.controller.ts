@@ -2,6 +2,7 @@ import type { FastifyReply, FastifyRequest } from "fastify"
 import type z from "zod"
 import type { loginSchema } from "../schemas/login.schema.js"
 import type { logoutSchema } from "../schemas/logout.schema.js"
+import type { meSchema } from "../schemas/me.schema.js"
 import type { refreshSchema } from "../schemas/refresh.schema.js"
 import type { LoginService } from "../services/login.service.js"
 import type { LogoutService } from "../services/logout.service.js"
@@ -13,6 +14,19 @@ export class AuthController {
 		private readonly logoutService: LogoutService,
 		private readonly refreshService: RefreshService,
 	) {}
+
+	async me(
+		request: FastifyRequest,
+		reply: FastifyReply<{
+			Reply: z.infer<(typeof meSchema.response)["200"]>
+		}>,
+	) {
+		return await reply.code(200).send({
+			data: {
+				id: request.user.sub,
+			},
+		})
+	}
 
 	async login(
 		request: FastifyRequest<{ Body: z.infer<typeof loginSchema.body> }>,

@@ -1,10 +1,10 @@
 import type { FastifyRequest } from "fastify"
-import { ForbiddenError } from "../error/Errors.js"
+import { UnauthorizedError } from "../error/Errors.js"
 
 export async function authHandler(request: FastifyRequest) {
 	try {
 		await request.jwtVerify()
 	} catch (_error) {
-		throw new ForbiddenError("Invalid access.", "INVALID_ACCESS")
+		throw new UnauthorizedError("Invalid access token.", "INVALID_ACCESS")
 	}
 }

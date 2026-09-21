@@ -7,6 +7,7 @@ import { PrismaRefreshTokenRepository } from "./repositories/prisma-refresh-toke
 import { PrismaUserRepository } from "./repositories/prisma-user.repository.js"
 import { loginSchema } from "./schemas/login.schema.js"
 import { logoutSchema } from "./schemas/logout.schema.js"
+import { meSchema } from "./schemas/me.schema.js"
 import { refreshSchema } from "./schemas/refresh.schema.js"
 
 export function authRoutes(app: AppInstance) {
@@ -17,6 +18,12 @@ export function authRoutes(app: AppInstance) {
 		tokenProvider,
 		userRepository,
 		refreshTokenRepository,
+	)
+
+	app.get(
+		"/me",
+		{ schema: meSchema, onRequest: [authHandler] },
+		authController.me.bind(authController),
 	)
 
 	app.post(

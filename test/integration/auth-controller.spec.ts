@@ -73,9 +73,12 @@ describe("Auth Controller", async () => {
 		const refreshToken = login.body.data.refreshToken
 		const accessToken = login.body.data.accessToken
 
-		const response = await request(app.server).post("/logout").send({
-			token: refreshToken,
-		}).set('Authorization', `Bearer ${accessToken}`)
+		const response = await request(app.server)
+			.post("/logout")
+			.send({
+				token: refreshToken,
+			})
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(200)
 
@@ -92,9 +95,12 @@ describe("Auth Controller", async () => {
 
 		const accessToken = login.body.data.accessToken
 
-		const response = await request(app.server).post("/logout").send({
-			token: "invalid-refresh-token",
-		}).set('Authorization', `Bearer ${accessToken}`)
+		const response = await request(app.server)
+			.post("/logout")
+			.send({
+				token: "invalid-refresh-token",
+			})
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.body.code).toBe("INVALID_REFRESH_TOKEN")
 		expect(response.status).toBe(401)
@@ -108,9 +114,12 @@ describe("Auth Controller", async () => {
 
 		const accessToken = login.body.data.accessToken
 
-		const response = await request(app.server).post("/logout").send({
-			refreshToken: "",
-		}).set('Authorization', `Bearer ${accessToken}`)
+		const response = await request(app.server)
+			.post("/logout")
+			.send({
+				refreshToken: "",
+			})
+			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(400)
 	})
@@ -156,5 +165,39 @@ describe("Auth Controller", async () => {
 		})
 
 		expect(response.status).toBe(400)
+	})
+
+	it("should get authenticated user data with valid token", async () => {
+		const login = await request(app.server).post("/login").send({
+			name: "John Doe",
+			password: "123456",
+		})
+
+		const accessToken = login.body.data.accessToken
+
+		const response = await request(app.server)
+			.get("/me")
+			.set("Authorization", `Bearer ${accessToken}`)
+
+		expect(response.status).toBe(200)
+		expect(response.body).toEqual({
+			data: {
+				id: expect.any(Number),
+			},
+		})
+	})
+
+	it("should not get user data without token", async () => {
+		const response = await request(app.server).get("/me")
+
+		expect(response.status).toBe(401)
+	})
+
+	it("should not get user data with invalid token", async () => {
+		const response = await request(app.server)
+			.get("/me")
+			.set("Authorization", "Bearer invalid-token")
+
+		expect(response.status).toBe(401)
 	})
 })
