@@ -11,7 +11,7 @@ export const loginSchema = {
 	}),
 	response: {
 		200: z.object({
-			data: z.object({ accessToken: z.string(), refreshToken: z.string() }),
+			data: z.object({ accessToken: z.string() }),
 		}),
 		400: errorSchema,
 		500: errorSchema,

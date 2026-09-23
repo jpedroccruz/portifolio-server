@@ -1,3 +1,4 @@
+import { fastifyCookie } from "@fastify/cookie"
 import fastifyCors from "@fastify/cors"
 import fastifyJwt from "@fastify/jwt"
 import fastify from "fastify"
@@ -41,6 +42,7 @@ app.register(fastifyCors, {
 	credentials: true,
 })
 
+app.register(fastifyCookie)
 swaggerConfig(app)
 
 app.register(routes)

@@ -1,4 +1,5 @@
 import type { FastifyError, FastifyReply, FastifyRequest } from "fastify"
+import z from "zod"
 import { env } from "../lib/env.js"
 import { AppError } from "./AppError.js"
 
@@ -11,6 +12,13 @@ export function errorHandler(
 		return reply
 			.code(error.statusCode)
 			.send({ code: error.code, message: error.message })
+	}
+
+	if (error instanceof z.ZodError) {
+		return reply.code(400).send({
+			code: "VALIDATION_ERROR",
+			message: error.message,
+		})
 	}
 
 	if (error.validation) {

@@ -1,9 +1,10 @@
 import type { FastifyReply, FastifyRequest } from "fastify"
 import type z from "zod"
+import { env } from "../../../shared/lib/env.js"
 import type { loginSchema } from "../schemas/login.schema.js"
-import type { logoutSchema } from "../schemas/logout.schema.js"
+import { logoutSchema } from "../schemas/logout.schema.js"
 import type { meSchema } from "../schemas/me.schema.js"
-import type { refreshSchema } from "../schemas/refresh.schema.js"
+import { refreshSchema } from "../schemas/refresh.schema.js"
 import type { LoginService } from "../services/login.service.js"
 import type { LogoutService } from "../services/logout.service.js"
 import type { RefreshService } from "../services/refresh.service.js"
@@ -34,27 +35,52 @@ export class AuthController {
 			Reply: z.infer<(typeof loginSchema.response)["200"]>
 		}>,
 	) {
-		const tokens = await this.loginService.execute(request.body)
-		return reply.code(200).send({ data: tokens })
+		const { accessToken, refreshToken } = await this.loginService.execute(
+			request.body,
+		)
+		return reply
+			.code(200)
+			.setCookie("refreshToken", refreshToken, {
+				httpOnly: true,
+				path: "/",
+				sameSite: "lax",
+				secure: env.APP_ENV === "prod",
+				maxAge: 60 * 60 * 24 * 30,
+			})
+			.send({ data: { accessToken } })
 	}
 
 	async logout(
-		request: FastifyRequest<{ Body: z.infer<typeof logoutSchema.body> }>,
+		request: FastifyRequest,
 		reply: FastifyReply<{
 			Reply: z.infer<(typeof logoutSchema.response)["200"]>
 		}>,
 	) {
-		await this.logoutService.execute(request.body.token)
-		return reply.code(200).send()
+		const { refreshToken } = logoutSchema.cookie.parse(request.cookies)
+
+		await this.logoutService.execute(refreshToken)
+		return reply.code(200).clearCookie("refreshToken").send()
 	}
 
 	async refresh(
-		request: FastifyRequest<{ Body: z.infer<typeof refreshSchema.body> }>,
+		request: FastifyRequest,
 		reply: FastifyReply<{
 			Reply: z.infer<(typeof refreshSchema.response)["200"]>
 		}>,
 	) {
-		const tokens = await this.refreshService.execute(request.body.token)
-		return reply.code(200).send({ data: tokens })
+		const { refreshToken } = refreshSchema.cookie.parse(request.cookies)
+
+		const tokens = await this.refreshService.execute(refreshToken)
+
+		return reply
+			.code(200)
+			.setCookie("refreshToken", tokens.refreshToken, {
+				httpOnly: true,
+				path: "/",
+				sameSite: "lax",
+				secure: env.APP_ENV === "prod",
+				maxAge: 60 * 60 * 24 * 30,
+			})
+			.send({ data: { accessToken: tokens.accessToken } })
 	}
 }

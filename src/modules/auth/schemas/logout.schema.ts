@@ -5,8 +5,8 @@ export const logoutSchema = {
 	tags: ["Auth"],
 	summary: "Logout",
 	description: "POST /logout - make logout",
-	body: z.object({
-		token: z.string().min(1),
+	cookie: z.object({
+		refreshToken: z.string().min(1),
 	}),
 	response: {
 		200: z.void(),
