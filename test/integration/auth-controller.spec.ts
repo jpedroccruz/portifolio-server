@@ -26,9 +26,11 @@ describe("Auth Controller", async () => {
 		expect(response.body).toEqual({
 			data: {
 				accessToken: expect.any(String),
-				refreshToken: expect.any(String),
 			},
 		})
+		expect(response.headers["set-cookie"]).toEqual(
+			expect.arrayContaining([expect.stringContaining("refreshToken=")]),
+		)
 
 		const tokens = await prisma.refreshToken.findMany()
 
@@ -65,19 +67,17 @@ describe("Auth Controller", async () => {
 	})
 
 	it("should logout successfully", async () => {
-		const login = await request(app.server).post("/login").send({
+		const agent = request.agent(app.server)
+
+		const login = await agent.post("/login").send({
 			name: "John Doe",
 			password: "123456",
 		})
 
-		const refreshToken = login.body.data.refreshToken
 		const accessToken = login.body.data.accessToken
 
-		const response = await request(app.server)
+		const response = await agent
 			.post("/logout")
-			.send({
-				token: refreshToken,
-			})
 			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(200)
@@ -97,9 +97,7 @@ describe("Auth Controller", async () => {
 
 		const response = await request(app.server)
 			.post("/logout")
-			.send({
-				token: "invalid-refresh-token",
-			})
+			.set("Cookie", "refreshToken=invalid-refresh-token")
 			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.body.code).toBe("INVALID_REFRESH_TOKEN")
@@ -116,31 +114,28 @@ describe("Auth Controller", async () => {
 
 		const response = await request(app.server)
 			.post("/logout")
-			.send({
-				refreshToken: "",
-			})
+			.set("Cookie", "refreshToken=")
 			.set("Authorization", `Bearer ${accessToken}`)
 
 		expect(response.status).toBe(400)
 	})
 
 	it("should refresh tokens successfully", async () => {
-		const login = await request(app.server).post("/login").send({
+		const agent = request.agent(app.server)
+
+		await agent.post("/login").send({
 			name: "John Doe",
 			password: "123456",
 		})
 
 		const oldTokens = await prisma.refreshToken.findMany()
 
-		const response = await request(app.server).post("/refresh").send({
-			token: login.body.data.refreshToken,
-		})
+		const response = await agent.post("/refresh")
 
 		expect(response.status).toBe(200)
 		expect(response.body).toEqual({
 			data: {
 				accessToken: expect.any(String),
-				refreshToken: expect.any(String),
 			},
 		})
 
@@ -151,18 +146,16 @@ describe("Auth Controller", async () => {
 	})
 
 	it("should not refresh with an invalid refresh token", async () => {
-		const response = await request(app.server).post("/refresh").send({
-			token: "invalid-refresh-token",
-		})
+		const response = await request(app.server)
+			.post("/refresh")
+			.set("Cookie", "refreshToken=invalid-refresh-token")
 
 		expect(response.status).toBe(401)
 		expect(response.body.code).toBe("INVALID_REFRESH_TOKEN")
 	})
 
 	it("should not refresh with an invalid payload", async () => {
-		const response = await request(app.server).post("/refresh").send({
-			refreshToken: "",
-		})
+		const response = await request(app.server).post("/refresh").send()
 
 		expect(response.status).toBe(400)
 	})
